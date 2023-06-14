@@ -12,11 +12,12 @@ const kafka = new Kafka({
 
 const consumer = kafka.consumer({ groupId: "test-group" });
 
-async function Sub() {
+async function Sub(partition_id) {
   await consumer.connect();
-  await consumer.subscribe({ topic: "test-topic", fromBeginning: true });
+  await consumer.subscribe({ topic: "test-topic", partition: 0, fromBeginning: true });
 
   await consumer.run({
+    partitionsConsumedConcurrently: 4,
     eachMessage: async ({ topic, partition, message }) => {
       console.log(topic);
       console.log({
@@ -26,4 +27,4 @@ async function Sub() {
     },
   });
 }
-Sub();
+
